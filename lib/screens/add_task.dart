@@ -12,24 +12,39 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
-  final _dueDateController = TextEditingController();
+  DateTime? _dueDateController;
+
+  void _presentDatePicker() async {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 1, now.month, now.day);
+
+    final pickedDate = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: firstDate,
+        lastDate: now);
+
+    setState(() {
+      _dueDateController = pickedDate;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red,
       appBar: AppBar(
-        title: Text('Ajouter une tâche'),
+        backgroundColor: Colors.redAccent,
+        title: const Text('Ajouter une tâche'),
       ),
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: <Widget>[
               TextFormField(
                 controller: _titleController,
-                decoration: InputDecoration(labelText: 'Titre'),
+                decoration: const InputDecoration(labelText: 'Titre'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Veuillez entrer un titre';
@@ -37,30 +52,28 @@ class _AddTaskState extends State<AddTask> {
                   return null;
                 },
               ),
-              TextFormField(
-                controller: _dueDateController,
-                decoration: InputDecoration(labelText: 'Date d\'échéance'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Veuillez entrer une date d\'échéance';
-                  }
-                  return null;
-                },
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(_dueDateController == null
+                        ? "No date selected"
+                        : formatter.format(_dueDateController!)),
+                    IconButton(
+                      onPressed: _presentDatePicker,
+                      icon: const Icon(Icons.calendar_month),
+                    )
+                  ],
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    Navigator.pop(
-                      context,
-                      Task(
-                        title: _titleController.text,
-                        dueDate: DateTime.parse(_dueDateController.text),
-                        isCompleted: true,
-                      ),
-                    );
+                    Navigator.pop(context);
                   }
                 },
-                child: Text('Ajouter'),
+                child: const Text('Ajouter'),
               ),
             ],
           ),

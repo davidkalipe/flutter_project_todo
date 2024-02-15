@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../models/task.dart';
@@ -20,8 +21,17 @@ class TaskDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(task.title, style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.w400),),
-            Text(task.dueDate.toString(), style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.w400),),
+            Text(
+              task.title,
+              style:
+                  GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.w400),
+            ),
+            const Gap(20),
+            Text(
+              task.dueDate.toString(),
+              style:
+                  GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.w400),
+            ),
           ],
         ),
       ),
